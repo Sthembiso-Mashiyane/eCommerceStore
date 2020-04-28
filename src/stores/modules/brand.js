@@ -26,12 +26,10 @@ const actions = {
                 }
                 toSend.push(toAdd);
             });
-            console.log(toSend);
             commit('SET_USER_ADDRESSES', toSend);
         })
     },
     saveBrand({commit}, brandObject) {
-        console.log(commit);
         db.collection("brands").doc(brandObject.docID).set({
             brandID: brandObject.docID,
             brandName: brandObject.brandName,
@@ -42,6 +40,7 @@ const actions = {
             ownerID: brandObject.ownerID,
             verified: brandObject.verified
         })
+        commit('', );
     }
 }
 

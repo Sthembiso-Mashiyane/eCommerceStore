@@ -7,6 +7,7 @@ import auth from './modules/auth';
 import brand from './modules/brand';
 import messages from './modules/messages';
 import address from "./modules/address";
+import productType from "./modules/productType";
 
 import * as actions from './actions';
 
@@ -20,7 +21,8 @@ const store = new Vuex.Store({
 		products,
 		messages,
 		brand,
-		address
+		address,
+		productType
 	}
 });
 

@@ -7,12 +7,12 @@ import Store from "./components/Store";
 import UserProfile from "./components/settings/UserProfile";
 import AddressBook from "./components/settings/AddressBook";
 import BrandProfile from "./components/brand/BrandProfile";
+import ProductTypes from "./components/admin/ProductTypes";
 
 function guardMyroute(to, from, next) {
     let isAuthenticated = false;
 //this is just an example. You will have to find a better or
 // centralised way to handle you localstorage data handling
-    console.log(localStorage.getItem('user').uid);
     const user = JSON.parse(localStorage.getItem('user'));
     if (user) {
         if (user.uid)
@@ -41,5 +41,6 @@ export const routes = [
     {path: '/user-profile', component: UserProfile, name: 'user-profile', beforeEnter: guardMyroute},
     {path: '/brand-profile', component: BrandProfile, name: 'brand-profile', beforeEnter: guardMyroute},
     {path: '/address-book', component: AddressBook, name: 'address-book', beforeEnter: guardMyroute},
+    {path: '/product-types', component: ProductTypes, name: 'product-types', beforeEnter: guardMyroute},
     {path: '*', redirect: '/'}
 ];

@@ -16,22 +16,6 @@ const config = {
 
 const firebaseDB = firebase.initializeApp(config);
 
-export function firebaseListener(func) {
-    firebaseDB.auth().onAuthStateChanged(function (user) {
-        if (user) {
-            console.log("User log in success", user);
-            func(true, user)
-            localStorage.setItem('user', JSON.stringify(user));
-        } else {
-            console.log("User log in failed", user);
-            func(false);
-            localStorage.setItem('user', null);
-        }
-    }, function (error) {
-        console.log(error)
-    });
-}
-
 // export const ref = firebaseDB.database().ref();
 export const firebaseAuth = firebaseDB.auth();
 export const db = firebaseDB.firestore();

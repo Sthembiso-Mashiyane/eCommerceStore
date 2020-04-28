@@ -31,7 +31,8 @@ export const registerByEmail = async ({commit}, {email, password, displayName, f
                 firstName: firstName,
                 lastName: lastName,
                 telNumber: telNum,
-                uid: res.user.uid
+                uid: res.user.uid,
+                isAdmin: false
             }
         ).then(() => {
             return
@@ -45,24 +46,23 @@ export const registerByEmail = async ({commit}, {email, password, displayName, f
     });
 }
 
-export const loginWithGoogle = async() => {
+export const loginWithGoogle = async () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    await firebaseAuth.signInWithPopup(provider).then(function async (result) {
+    await firebaseAuth.signInWithPopup(provider).then(function async(result) {
         const user = result.user;
 
         db.collection("users").doc(user.uid).get().then(res => {
-            if(res.exists){
+            if (res.exists) {
                 return
-            }
-            else{
+            } else {
                 return db.collection("users").doc(user.uid).set({
                     displayName: user.displayName,
                     email: user.email,
                     telNumber: user.phoneNumber || '',
                     uid: user.uid,
                     addedByGoogleAuth: true,
-                    firstName:  '',
-                    lastName:  '',
+                    firstName: '',
+                    lastName: '',
                 })
             }
 
@@ -99,6 +99,21 @@ export function getShoppingCart({commit}, {uid, currentCart}) {
             console.log(cart.data());
             if (cart.data() && (!currentCart || currentCart.length == 0)) {
                 commit('SET_CART', cart.data().products);
+            }
+        });
+    } else {
+        // console.log("User has not logged in");
+    }
+}
+
+export function setUser({commit}, uid) {
+    if (uid) {
+        return db.collection("users").doc(uid).get().then((res) => {
+            console.log(res.data());
+            if (res.exists) {
+                commit('EDIT_USER_STATE', res.data());
+            } else {
+                commit('EDIT_USER_STATE', null);
             }
         });
     } else {

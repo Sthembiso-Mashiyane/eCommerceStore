@@ -27,10 +27,12 @@
 
                     <b-nav-item-dropdown text="Brand Admin" v-if="isLoggedIn" right>
                         <b-dropdown-item to="/brand-profile" href="#">Brand Profile</b-dropdown-item>
+                        <b-dropdown-item to="/brand-profile" href="#">Inventory</b-dropdown-item>
                     </b-nav-item-dropdown>
 
-                    <b-nav-item-dropdown text="Admin" v-if="isLoggedIn" right>
-                        <b-dropdown-item to="/user-profile" href="#">Profile</b-dropdown-item>
+                    <b-nav-item-dropdown text="Admin" v-if="isLoggedIn && user.isAdmin" right>
+                        <b-dropdown-item to="/product-types" href="#">Product Types</b-dropdown-item>
+                        <b-dropdown-item to="/brand-profile" href="#">Brand Profile</b-dropdown-item>
                         <b-dropdown-item  href="#">Sign Out</b-dropdown-item>
                     </b-nav-item-dropdown>
                 </b-navbar-nav>
@@ -49,17 +51,11 @@
         data() {
             return {
                 isNavOpen: false,
-                user: {
-                    firstName: '',
-                    lastName: '',
-                    phoneNumber: ''
-                },
                 show: true
-
             }
         },
         computed: {
-            ...mapGetters(['isLoggedIn', 'cartValue', 'currentUser', 'cartItemList', 'currentUser']),
+            ...mapGetters(['isLoggedIn', 'cartValue', 'user', 'cartItemList', 'currentUser']),
             numItems() {
                 return this.cartItemList.reduce((total, item) => {
                     total += item.quantity;
