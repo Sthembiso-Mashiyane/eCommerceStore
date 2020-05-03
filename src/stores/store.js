@@ -8,6 +8,8 @@ import brand from './modules/brand';
 import messages from './modules/messages';
 import address from "./modules/address";
 import productType from "./modules/productType";
+import inventory from "./modules/inventory";
+
 
 import * as actions from './actions';
 
@@ -22,7 +24,8 @@ const store = new Vuex.Store({
 		messages,
 		brand,
 		address,
-		productType
+		productType,
+		inventory
 	}
 });
 

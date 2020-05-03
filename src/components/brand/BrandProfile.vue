@@ -1,6 +1,9 @@
 <template>
     <div class="row">
-        <div class="col-md-6 offset-md-3 col-sm-10 offset-sm-1">
+        <div v-if="isBrandLoading" class="w-100">
+            <grid-loader :loading="isBrandLoading"></grid-loader>
+        </div>
+        <div v-if="!isBrandLoading" class="col-md-6 offset-md-3 col-sm-10 offset-sm-1">
             <form id="register-form" role="form">
                 <h3 class="text-center">Brand Details</h3>
                 <div class="form-group">
@@ -9,7 +12,7 @@
                            placeholder="Brand Name"
                            value=""
                            v-model="brand.brandName">
-                    <div class="error text-danger" v-if="!$v.brand.brandName.required">Brand Name is required</div>
+                    <div class="error text-danger" v-if="!$v.brand.brandName.required">Product Name is required</div>
                 </div>
                 <div class="form-group" :class="{ 'form-group--error': $v.brand.brandDescription.$error }">
                     <label for="brandDescription">Brand Description </label>
@@ -18,7 +21,7 @@
                            placeholder="Brand Description"
                            value=""
                            v-model="brand.brandDescription">
-                    <div class="error text-danger" v-if="!$v.brand.brandDescription.required">Brand Description is
+                    <div class="error text-danger" v-if="!$v.brand.brandDescription.required">Product Description is
                         required
                     </div>
                 </div>
@@ -30,7 +33,7 @@
                             @change="onFileChange"
                     ></b-form-file>
                     <div id="preview" class="pt-5">
-                        <img v-if="url" :src="url"/>
+                        <img v-if="url || brand.logoURL" :src="url || brand.logoURL"/>
                     </div>
                 </div>
                 <div class="form-group" :class="{ 'form-group--error': $v.brand.brandTelNumber.$error }">
@@ -54,7 +57,14 @@
                     <div class="error text-danger" v-if="!$v.brand.brandEmail">Please enter a valid email address.
                     </div>
                 </div>
-                <div class="form-group">
+                <div v-if="!brand.brandID" class="form-group">
+                    <button class="btn btn-success" style="width: 100%" @click.prevent="saveBrandLocal"
+                            :disabled="uploadingStatus">
+                        <i v-if="uploadingStatus" class="fa fa-spinner fa-spin"/>
+                        Add
+                    </button>
+                </div>
+                <div v-if="brand.brandID" class="form-group">
                     <button class="btn btn-success" style="width: 100%" @click.prevent="saveBrandLocal"
                             :disabled="uploadingStatus">
                         <i v-if="uploadingStatus" class="fa fa-spinner fa-spin"/>
@@ -75,18 +85,6 @@
         name: "BrandProfile",
         data() {
             return {
-                brand: {
-                    brandID: '',
-                    brandName: '',
-                    brandLogo: '',
-                    brandTelNumber: '',
-                    brandEmail: '',
-                    brandDescription: '',
-                    docID: '',
-                    logoURL: '',
-                    ownerID: '',
-                    verified: false
-                },
                 url: '',
                 uploadValue: '',
                 logoURL: '',
@@ -94,19 +92,21 @@
             }
         },
         computed: {
-            ...mapGetters(['user'])
+            ...mapGetters(['user', 'brand', 'isBrandLoading'])
         },
         validations: {
             brand: {
                 brandName: {required},
-                brandLogo: {required},
                 brandTelNumber: {required, maxLength: maxLength(10), minLength: minLength(10)},
                 brandEmail: {required},
                 brandDescription: {required},
             }
         },
+        created() {
+            this.getBrandByID(this.user.uid);
+        },
         methods: {
-            ...mapActions(['getBrandDocReferenceBeforeSave', 'saveBrand', 'addMessage']),
+            ...mapActions(['getBrandDocReferenceBeforeSave', 'saveBrand', 'addMessage', 'getBrandByID']),
             onFileChange(e) {
                 this.brand.brandLogo = e.target.files[0];
                 const file = e.target.files[0];

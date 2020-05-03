@@ -8,6 +8,8 @@ import UserProfile from "./components/settings/UserProfile";
 import AddressBook from "./components/settings/AddressBook";
 import BrandProfile from "./components/brand/BrandProfile";
 import ProductTypes from "./components/admin/ProductTypes";
+import Inventory from "./components/brand/Inventory";
+
 
 function guardMyroute(to, from, next) {
     let isAuthenticated = false;
@@ -42,5 +44,6 @@ export const routes = [
     {path: '/brand-profile', component: BrandProfile, name: 'brand-profile', beforeEnter: guardMyroute},
     {path: '/address-book', component: AddressBook, name: 'address-book', beforeEnter: guardMyroute},
     {path: '/product-types', component: ProductTypes, name: 'product-types', beforeEnter: guardMyroute},
+    {path: '/inventory', component: Inventory, name: 'inventory', beforeEnter: guardMyroute},
     {path: '*', redirect: '/'}
 ];

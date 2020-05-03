@@ -2,11 +2,12 @@ import {db} from "../../config/firebaseConfig";
 
 const state = {
     isBrandLoading: false,
+    brand: ''
 }
 
 const mutations = {
-    'SET_BRAND'(state, addresses) {
-        state.addresses = addresses;
+    'SET_BRAND'(state, brand) {
+        state.brand = brand;
         state.isBrandLoading = false;
     },
 }
@@ -40,11 +41,24 @@ const actions = {
             ownerID: brandObject.ownerID,
             verified: brandObject.verified
         })
-        commit('', );
+        commit('',);
+    },
+    getBrandByID({commit}, ownerID) {
+        console.log(commit);
+        return db.collection("brands").where('ownerID', '==', ownerID).onSnapshot(res => {
+            commit('SET_BRAND', res.docs[0].data());
+        })
     }
 }
 
-const getters = {}
+const getters = {
+    isBrandLoading: (state) => {
+        return state.isBrandLoading;
+    },
+    brand: (state) => {
+        return state.brand;
+    }
+}
 
 export default {
     state,

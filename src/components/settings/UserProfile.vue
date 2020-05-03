@@ -75,9 +75,6 @@
                 email: {required, email},
             }
         },
-        created() {
-            this.getUser(JSON.parse(localStorage.getItem('user')).uid);
-        },
         computed: {
             ...mapGetters(['user', 'isUserLoading']),
         },

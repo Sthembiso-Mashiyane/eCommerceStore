@@ -17,8 +17,8 @@
             </div>
         </div>
 
-        <div class="row" v-if="false">
-            <app-product-item v-for="prod in products" :item="prod" :key="prod.id"
+        <div class="row">
+            <app-product-item v-for="prod in products" :item="prod" :key="prod.productID"
                               :displayList="displayList"></app-product-item>
         </div>
 
@@ -39,7 +39,7 @@
             }
         },
         computed: {
-            ...mapGetters(['products', 'isProductLoading']),
+            ...mapGetters(['inventory', 'products','isProductLoading']),
         },
         components: {
             appProductItem: ProductItem,

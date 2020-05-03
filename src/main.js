@@ -9,6 +9,7 @@ import {firebaseAuth} from './config/firebaseConfig';
 
 import App from './App.vue';
 import Vuelidate from 'vuelidate'
+import './registerServiceWorker'
 
 Vue.use(Vuelidate)
 Vue.use(BootstrapVue);

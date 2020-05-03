@@ -9,7 +9,7 @@ export const updateCart = ({
     commit('UPDATE_CART', {item, quantity, isAdd});
     if (isAdd) {
         let message_obj = {
-            message: `Add ${item.title} to cart successfully`,
+            message: `Add ${item.productName} to cart successfully`,
             messageClass: "success",
             autoClose: true
         }
@@ -84,7 +84,7 @@ export function loginWithEmail(_, {email, password}) {
 }
 
 export function listenToProductList({commit}) {
-    return db.collection("products").onSnapshot(products => {
+    return db.collection("inventory").onSnapshot(products => {
         let toSend = []
         products.forEach(item => {
             toSend.push(item.data())

@@ -27,7 +27,7 @@
 
                     <b-nav-item-dropdown text="Brand Admin" v-if="isLoggedIn" right>
                         <b-dropdown-item to="/brand-profile" href="#">Brand Profile</b-dropdown-item>
-                        <b-dropdown-item to="/brand-profile" href="#">Inventory</b-dropdown-item>
+                        <b-dropdown-item to="/inventory" href="#">Inventory</b-dropdown-item>
                     </b-nav-item-dropdown>
 
                     <b-nav-item-dropdown text="Admin" v-if="isLoggedIn && user.isAdmin" right>
