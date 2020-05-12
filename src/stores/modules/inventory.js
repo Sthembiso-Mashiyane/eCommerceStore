@@ -1,19 +1,35 @@
 import {db} from "../../config/firebaseConfig";
+import * as moment from "moment";
 
 const state = {
     isInventoryLoading: false,
-    inventory: []
+    isProductLoading: false,
+    isProductListLoading: true,
+    inventory: [],
+    viewProduct: {},
+    products: []
 }
 
 const mutations = {
+
+    'SET_PRODUCT_LIST'(state, inventory) {
+        state.products = inventory;
+        state.isProductListLoading = false;
+
+    },
     'SET_INVENTORY'(state, inventory) {
         state.inventory = inventory;
         state.isInventoryLoading = false;
     },
+
+    'SET_VIEW_PRODUCT'(state, inventory) {
+        state.viewProduct = inventory;
+        state.isProductLoading = false;
+    },
 }
 
 const actions = {
-    getBrandDocReferenceBeforeSave() {
+    getProductDocReferenceBeforeSave() {
         return db.collection("inventory").doc();
     },
     getInventory({commit}, uid) {
@@ -31,23 +47,39 @@ const actions = {
     },
     saveInventory({commit}, inventoryObject) {
         console.log(commit);
-        console.log(inventoryObject);
-        const docRef = db.collection('inventory').doc();
-
-        db.collection("inventory").doc(docRef.id).set({
-            productID: docRef.id,
+        db.collection("inventory").doc(inventoryObject.docID).set({
+            productID: inventoryObject.docID,
             productName: inventoryObject.productName,
             ownerID: inventoryObject.ownerID,
             brandID: inventoryObject.brandID,
             verified: inventoryObject.verified,
-            productDescription: inventoryObject.productDescription
+            productDescription: inventoryObject.productDescription,
+            productType: inventoryObject.productType,
+            brandName: inventoryObject.brandName,
+            addedTimeStamp: moment().unix(),
+            gender: inventoryObject.gender,
+            thumbnailURL: inventoryObject.thumbnailURL
         })
     },
-    getBrandByID({commit}, ownerID) {
+    updateInventory({commit}, inventoryObject) {
         console.log(commit);
-        return db.collection("brands").where('ownerID', '==', ownerID).onSnapshot(res => {
-            commit('SET_BRAND', res.docs[0].data());
+
+        db.collection("inventory").doc(inventoryObject.productID).set({
+            productID: inventoryObject.productID,
+            productName: inventoryObject.productName,
+            ownerID: inventoryObject.ownerID,
+            brandID: inventoryObject.brandID,
+            verified: inventoryObject.verified,
+            productDescription: inventoryObject.productDescription,
+            productType: inventoryObject.productType
         })
+    },
+    getProductByID({commit}, productID) {
+        console.log(commit);
+        state.isProductLoading = true;
+        return db.collection('inventory').doc(productID).onSnapshot(res => {
+            commit('SET_VIEW_PRODUCT', res.data());
+        });
     }
 }
 
@@ -57,7 +89,20 @@ const getters = {
     },
     inventory: (state) => {
         return state.inventory;
+    },
+    viewProduct: (state) => {
+        return state.viewProduct
+    },
+    isProductLoading: (state) => {
+        return state.isProductLoading
+    },
+    isProductListLoading: (state) => {
+        return state.isProductListLoading
+    },
+    products: (state) => {
+        return state.products;
     }
+
 }
 
 export default {

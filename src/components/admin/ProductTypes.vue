@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <label for="size">Add Size</label>
-                    <input type="size" required="required" name="size" id="size"
+                    <input type="number" required="required" name="size" id="size"
                            class="form-control mb-3"
                            placeholder="Add Size"
                            value=""
@@ -67,14 +67,17 @@
                 }
             }
         },
-        computed: {
-        },
+        computed: {},
         methods: {
             ...mapActions(['saveProductType']),
             addSize(size) {
-                this.productType.sizes.push(size);
+                this.productType.sizes.push({
+                    size: size,
+                    stock: 0,
+                    price: 0
+                });
             },
-            saveProductTypeLocal(){
+            saveProductTypeLocal() {
                 this.saveProductType(this.productType);
             }
         },

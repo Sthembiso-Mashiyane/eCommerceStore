@@ -9,6 +9,9 @@ import AddressBook from "./components/settings/AddressBook";
 import BrandProfile from "./components/brand/BrandProfile";
 import ProductTypes from "./components/admin/ProductTypes";
 import Inventory from "./components/brand/Inventory";
+import Success from "./components/payment/Success";
+import Checkout from "./components/payment/Checkout";
+import Cancel from "./components/payment/Cancel";
 
 
 function guardMyroute(to, from, next) {
@@ -45,5 +48,9 @@ export const routes = [
     {path: '/address-book', component: AddressBook, name: 'address-book', beforeEnter: guardMyroute},
     {path: '/product-types', component: ProductTypes, name: 'product-types', beforeEnter: guardMyroute},
     {path: '/inventory', component: Inventory, name: 'inventory', beforeEnter: guardMyroute},
+    {path: '/successful-payment', component: Success, name: 'success', beforeEnter: guardMyroute},
+    {path: '/cancel-payment', component: Cancel, name: 'cancel', beforeEnter: guardMyroute},
+    {path: '/checkout', component: Checkout, name: 'checkout', beforeEnter: guardMyroute},
+
     {path: '*', redirect: '/'}
 ];

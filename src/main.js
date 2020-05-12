@@ -6,16 +6,17 @@ import './assets/styles/app.scss'
 import {BootstrapVue, BootstrapVueIcons} from 'bootstrap-vue/dist/bootstrap-vue.esm';
 import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 import {firebaseAuth} from './config/firebaseConfig';
-
 import App from './App.vue';
 import Vuelidate from 'vuelidate'
-import './registerServiceWorker'
+import wb from "./registerServiceWorker";
+import ImageUploader from 'vue-image-upload-resize'
 
+Vue.prototype.$workbox = wb;
 Vue.use(Vuelidate)
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
 Vue.use(VueRouter);
-
+Vue.use(ImageUploader);
 
 export function firebaseListener(func) {
     firebaseAuth.onAuthStateChanged(function (user) {

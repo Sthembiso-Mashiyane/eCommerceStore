@@ -1,6 +1,6 @@
 <template>
     <div>
-        <b-navbar toggleable="lg" type="dark" variant="info">
+        <b-navbar toggleable="lg" type="dark" variant="dark">
             <b-navbar-brand to="/" href="#">Dripy</b-navbar-brand>
 
             <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -15,7 +15,7 @@
                     <b-nav-item v-if="!isLoggedIn" to="/login" href="#">Login</b-nav-item>
                     <b-nav-item v-if="!isLoggedIn" to="/register" href="#">Register</b-nav-item>
 
-                    <b-nav-item to="/cart" class="btn btn-dark">
+                    <b-nav-item to="/cart" class="text-center btn-info">
                         Checkout <span class="badge badge-light">{{ numItems }} (R {{ cartValue }})</span>
                     </b-nav-item>
 

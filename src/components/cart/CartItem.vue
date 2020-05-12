@@ -3,22 +3,22 @@
 		<td data-th="Product">
 			<div class="row">
 				<div class="col-sm-2 d-none d-sm-block">
-					<img :src="cartItem.thumbnail_url" alt="..." class="img-fluid"/>
+					<b-img-lazy :src="cartItem.thumbnailURL" :alt=cartItem.description class="img-fluid"/>
 				</div>
 				<div class="col-sm-10">
-					<h4 class="nomargin">{{ cartItem.title }}</h4>
-					<p>{{ cartItem.description }}</p>
+					<h4 class="nomargin">{{ cartItem.productName }}</h4>
+					<p>{{ cartItem.productDescription }}</p>
 				</div>
 			</div>
 		</td>
-		<td data-th="Price">{{ cartItem.price }}</td>
+		<td data-th="Price">R{{ formatPrice(cartItem.price) }}</td>
 		<td data-th="Quantity">
 			<input type="number" class="form-control text-center"
 				:value="cartItem.quantity"
 				@input="updateQuantity"
 				min="0">
 		</td>
-		<td data-th="Subtotal" class="text-center">${{ subtotal }}</td>
+		<td data-th="Subtotal" class="text-center">R{{ formatPrice(subtotal) }}</td>
 		<td class="actions" data-th="">
 			<button class="btn btn-danger btn-sm" @click="removeItem"><i class="fa fa-trash-o"></i></button>
 		</td>
@@ -49,6 +49,10 @@
 					quantity: parseInt(event.target.value),
 					isAdd: false
 				});
+			},
+			formatPrice(value) {
+				let val = (value / 1).toFixed(2).replace('.', ',')
+				return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 			}
 		}
 	}

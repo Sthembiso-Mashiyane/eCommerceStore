@@ -85,11 +85,38 @@ export function loginWithEmail(_, {email, password}) {
 
 export function listenToProductList({commit}) {
     return db.collection("inventory").onSnapshot(products => {
-        let toSend = []
+        let toSend = [];
+        let totalStock = 0;
+        let alternatingPrices = false;
+        let alternatingPricesCounter = 0;
+        let startingPrice = Number.MAX_VALUE;
         products.forEach(item => {
-            toSend.push(item.data())
+            const object = item.data();
+            totalStock = 0;
+            startingPrice = Number.MAX_VALUE;
+            console.log(item.data())
+
+            for (const type of object.productType.sizes) {
+                totalStock += parseFloat(type.stock)
+                if (startingPrice > type.price && type.price != 0) {
+                    startingPrice = type.price;
+                    alternatingPricesCounter++;
+                    if (alternatingPricesCounter == 2) {
+                        alternatingPrices = true
+                    }
+                }
+            }
+
+
+            toSend.push({
+                ...item.data(),
+                totalStock: totalStock,
+                startingPrice: startingPrice,
+                alternatingPrices: alternatingPrices
+            })
         })
-        commit('UPDATE_PRODUCT_LIST', toSend);
+        console.log(toSend);
+        commit('SET_PRODUCT_LIST', toSend);
     })
 }
 

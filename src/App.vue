@@ -1,23 +1,16 @@
 <template>
-    <div class="d-flex flex-column sticky-footer-wrapper">
+    <div class="d-flex flex-column sticky-footer-wrapper baseStyles">
         <main class="flex-fill">
             <app-header></app-header>
             <message-component></message-component>
-            <div class="container mt-5">
+            <div class="container-fluid mt-5 ">
                 <div class="row">
                     <div class="col-md-12">
                         <router-view></router-view>
-<!--                        <div class="card panel-warning d-none d-sm-flex" id="reset-store-panel">-->
-<!--                            <div class="card-header">Admin Panel (Testing purpose)</div>-->
-<!--                            <div class="card-body text-center">-->
-<!--                                <button class="btn btn-warning">Reset Store</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </div>
         </main>
-
         <footer class="navbar-default navbar-bottom navbar-dark bg-dark">
             <div class="container-fluid">
                 <p class="text-center nav-bar mb-0">Proudly Brought To You By <a
@@ -41,11 +34,12 @@
             MessageComponent
         },
         methods: {
-            ...mapActions(['getShoppingCart', 'listenToProductList'])
+            ...mapActions(['getShoppingCart', 'listenToProductList', 'getProductTypes'])
         },
         created() {
             let uid = this.$store.getters.currentUser.uid;
             this.listenToProductList();
+            this.getProductTypes();
             this.getShoppingCart({uid, currentCart: this.$store.getters.cartItemList});
         }
     }
@@ -64,6 +58,10 @@
 
     .flex-fill {
         flex: 1 1 auto;
+    }
+
+    .baseStyles {
+        background-color: #F4F4F4;
     }
 
     footer {
