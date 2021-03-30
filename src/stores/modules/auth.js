@@ -38,6 +38,7 @@ const actions = {
             firstName: userObject.firstName,
             lastName: userObject.lastName,
             telNumber: userObject.telNumber,
+            isBrand: userObject.isBrand || false
         }).then(r => {
             console.log(r);
             commit('EDIT_USER_STATE', r);

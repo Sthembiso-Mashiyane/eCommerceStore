@@ -1,45 +1,35 @@
 <template>
-    <!--    <div class="mb-3 col-sm-4 col-md-3 item">-->
-    <!--        <div class="card cardLike" style="">-->
-    <!--            <div class="card-body">-->
-    <!--                <h6 v-if="item.totalStock < 20" class="card-subtitle mb-2 text-warning">{{ item.totalStock }} left in-->
-    <!--                    stock</h6>-->
-    <!--            </div>-->
-    <!--            <div class="">-->
-    <!--                <b-img-lazy class="intrinsic thumbnail-image" :src=item.thumbnailURL :alt=item.description></b-img-lazy>-->
-    <!--            </div>-->
-    <!--            <div class="card-body">-->
-    <!--                <router-link :to="'/product/' + item.productID" tag="h5" class="card-title"><a>{{ item.productName-->
-    <!--                    }}</a></router-link>-->
-    <!--                &lt;!&ndash;                <h6 v-if="item.totalStock > 20" class="card-subtitle mb-2 text-info">{{ item.totalStock }} left in&ndash;&gt;-->
-    <!--                &lt;!&ndash;                    stock</h6>&ndash;&gt;-->
-    <!--                <p v-if="!item.alternatingPrices">{{ item.startingPrice | currency }}</p>-->
-    <!--                <p v-if="item.alternatingPrices">FROM {{ item.startingPrice | currency }}</p>-->
-    <!--                <p v-if="item.productDescription"> {{ item.productDescription }}</p>-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-    <div class="mb-3 col-md-3" :class="{'list-group-item': displayList}">
-        <div class="card" @click="goToRoute(item.productID)">
-            <div class="card-body">
-                <h6 v-if="item.totalStock < 11" class="card-subtitle mb-2 text-warning">{{ item.totalStock }} left in
-                    stock</h6>
-            </div>
-            <div class="img-container">
-                <img :src="item.thumbnailURL" alt="" class=" thumbnail-image card-img-top intrinsic-item">
-            </div>
-            <div class="card-body">
-                <router-link :to="'/product/' + item.productID" tag="h5" class="card-title"><a class="text-info">{{
-                    item.productName
-                    }}</a>
-                </router-link>
-<!--                <p class="card-text truncate">{{ item.productDescription | shortDescription}}</p>-->
-                <div class="">
-                    <p class="">{{ item.startingPrice | currency}}</p>
-                </div>
-            </div>
-        </div>
+    <div class="mb-3 mb-md-4 col-md-3 col-12" @click="goToRoute(item.productID)">
+        <md-card md-with-hover class="alert-light">
+            <md-ripple>
+                <md-card-header>
+                </md-card-header>
+                <b-img-lazy :src="item.thumbnailURL" alt="" class="card-img-top"></b-img-lazy>
+                <md-card-content>
+                    <router-link :to="'/product/' + item.productID" tag="h4" class="card-title"><a class="text-info">{{
+                        item.productName
+                        }}</a>
+                    </router-link>
+                    <!--                <p class="card-text truncate">{{ item.productDescription | shortDescription}}</p>-->
+                    <div class="">
+                        <p class="font-italic text-black-50">{{ item.brandName}}</p>
+                        <hr>
+                        <p v-if="!item.alternatingPrices" class="price "> {{ item.startingPrice | currency}}</p>
+                        <p v-if="item.alternatingPrices" class="price "> From {{ item.startingPrice | currency}}</p>
+                    </div>                </md-card-content>
+            </md-ripple>
+        </md-card>
     </div>
+<!--        <div class="mb-3 mb-md-4 col-md-3 col-12">-->
+<!--            <div class="card" @click="goToRoute(item.productID)">-->
+<!--                <div class="img-container">-->
+<!--                    <b-img-lazy :src="item.thumbnailURL" alt="" class="card-img-top"></b-img-lazy>-->
+<!--                </div>-->
+<!--                <div class="card-body card-text">-->
+<!--                    -->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 </template>
 
 <script>
@@ -89,11 +79,20 @@
         text-align: center;
     }
 
+    .font-initial {
+        font: initial;
+    }
+
+    .price {
+        font-family: "Times New Roman"
+    }
+
     div.card {
         height: 100%;
+        border: none !important;
 
         &:hover {
-            transition: all 0.9s ease-out;
+            transition: all 0.5s ease-in;
             box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
             border: 1px solid #cccccc;
             background-color: white;
@@ -106,6 +105,7 @@
 
     .card-text {
         font-size: 0.875rem;
+        line-height: 0
     }
 
     .remain {
@@ -185,6 +185,14 @@
         box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2);
         border: 1px solid #cccccc;
         background-color: white;
+    }
+
+    .card-img-top {
+        flex-shrink: 0 !important;
+        width: 100% !important;
+        height: 200px !important;
+        object-fit: contain !important;
+        -o-object-fit: contain !important;
     }
 
 

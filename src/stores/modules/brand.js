@@ -2,7 +2,7 @@ import {db} from "../../config/firebaseConfig";
 
 const state = {
     isBrandLoading: false,
-    brand: ''
+    brand: {}
 }
 
 const mutations = {
@@ -16,9 +16,9 @@ const actions = {
     getBrandDocReferenceBeforeSave() {
         return db.collection("brands").doc();
     },
-    getBrand({commit}, uid) {
+    getBrands({commit}, uid) {
         state.isAddressesLoading = true
-        return db.collection("brands").doc(uid).collection('addresses').onSnapshot(addresses => {
+        return db.collection("brands").doc(uid).collection('addresses').get().then(addresses => {
             const toSend = []
             addresses.forEach(function (doc) {
                 const toAdd = {
@@ -39,14 +39,14 @@ const actions = {
             brandDescription: brandObject.brandDescription,
             logoURL: brandObject.logoURL,
             ownerID: brandObject.ownerID,
-            verified: brandObject.verified
+            verified: brandObject.verified || false
         })
         commit('',);
     },
     getBrandByID({commit}, ownerID) {
         console.log(commit);
-        return db.collection("brands").where('ownerID', '==', ownerID).onSnapshot(res => {
-            commit('SET_BRAND', res.docs[0].data());
+        return db.collection("brands").where('ownerID', '==', ownerID).get().then(res => {
+            commit('SET_BRAND', res.docs[0].data() || {});
         })
     }
 }

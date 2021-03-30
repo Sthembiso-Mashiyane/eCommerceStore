@@ -1,11 +1,12 @@
 <template>
-    <div class="">
+    <v-container fluid class="">
         <div class="pb-3">
             <b-button @click="showModal">Add Product</b-button>
         </div>
         <table class="table table-bordered table-responsive-sm">
             <thead>
             <tr>
+                <th>Image</th>
                 <th>Product Name</th>
                 <th>Description</th>
                 <th>Product Type</th>
@@ -14,6 +15,10 @@
             </thead>
             <tbody>
             <tr v-for="inventoryItem in inventory" :key="inventoryItem.productID">
+                <td class="w-25">
+                    <b-img-lazy class="img-fluid img-thumbnail" :src=inventoryItem.thumbnailURL
+                                alt="Dripy"></b-img-lazy>
+                </td>
                 <td>{{inventoryItem.productName}}</td>
                 <td>{{inventoryItem.productDescription}}</td>
                 <td>{{inventoryItem.productType.productTypeName}}</td>
@@ -30,7 +35,7 @@
                     <form id="register-form" role="form">
                         <h3 v-if="!product.productID" class="text-center">Add New Product</h3>
                         <h3 v-if="product.productID" class="text-center">Edit Product</h3>
-                        <div class="form-group">
+                        <div class="form-group" :class="{ 'form-group--error': $v.product.productName.$error }">
                             <label for="productName">Product Name</label>
                             <input type="text" required="required" name="productName" id="productName"
                                    class="form-control mb-3"
@@ -41,17 +46,16 @@
                                 required
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="brandName">Brand Name</label>
-                            <input type="text" required="required" name="brandName" id="brandName"
-                                   class="form-control mb-3"
-                                   placeholder="Brand Name"
-                                   value=""
-                                   v-model="product.brandName">
-                            <div class="error text-danger" v-if="!$v.product.brandName.required">Brand Name is
-                                required
-                            </div>
-                        </div>
+
+<!--                        <div class="form-group" :class="{ 'form-group&#45;&#45;error': $v.firstName.$error }">-->
+<!--                            <label for="firstName">First Name</label>-->
+<!--                            <input type="text" required="required" name="email" id="firstName" class="form-control mb-3"-->
+<!--                                   placeholder="First Name"-->
+<!--                                   value=""-->
+<!--                                   v-model="firstName">-->
+<!--                            <div class="error text-danger" v-if="!$v.firstName.required">First Name is required</div>-->
+<!--                        </div>-->
+
                         <div class="form-group">
                             <label for="productDescription">Product Description</label>
                             <input type="text" required="required" name="productDescription" id="productDescription"
@@ -82,17 +86,17 @@
                                 </b-form-select-option>
                             </b-form-select>
                         </div>
-                        <div class="form-group">
+                        <div v-if="!product.productID" class="form-group">
                             <label>Main Image (Mandatory)</label>
                             <image-uploader
                                     :preview="true"
                                     :className="['fileinput', { 'fileinput--loaded': hasImage }]"
                                     capture="environment"
                                     :debug="1"
-                                    maxWidth="210"
-                                    maxHeight="210"
+                                    maxHeight="2000px"
                                     :quality="1"
-                                    outputFormat="file"
+                                    maxSize="0.070"
+                                    outputFormat="blob"
                                     @input="setImage"
                                     v-model="product.mainImage"
                                     :state="Boolean(product.mainImage)"
@@ -107,6 +111,7 @@
                                     <th>Size</th>
                                     <th>Stock</th>
                                     <th>Price</th>
+
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -122,7 +127,6 @@
                                                placeholder="Price"
                                                value=""
                                                v-model="size.price"></td>
-
                                 </tr>
                                 </tbody>
                             </table>
@@ -152,7 +156,7 @@
 
         </b-modal>
 
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -180,6 +184,7 @@
             async saveProductLocal() {
                 this.isSaving = true;
                 this.product.brandID = this.brand.brandID;
+                this.product.brandName = this.brand.brandName;
                 this.product.ownerID = this.user.uid;
                 this.product.verified = false;
                 const that = this;
@@ -189,7 +194,7 @@
                     that.product.docID = results.id;
                     // Create a root reference
                     console.log(that.product.mainImage);
-                    const uploadTask = firebase.storage().ref(that.product.brandID + '/' + moment().unix() +'_thumbnail')
+                    const uploadTask = firebase.storage().ref(that.product.brandID + '/' + moment().unix() + '_thumbnail')
                         .put(that.product.mainImage);
 
                     uploadTask.on('state_changed', function (snapshot) {
@@ -235,7 +240,7 @@
                 console.log(file)
                 this.url = URL.createObjectURL(file);
             },
-            setImage: function(output) {
+            setImage: function (output) {
                 this.product.mainImage = output;
                 console.log('Info', output.info)
                 console.log('Exif', output.exif)
@@ -256,21 +261,13 @@
         ,
         validations: {
             product: {
-                productName: {
-                    required
-                }
+                productName: {required}
                 ,
-                productDescription: {
-                    required
-                }
+                productDescription: {required}
                 ,
-                brandName: {
-                    required
-                }
+                brandName: {required}
                 ,
-                gender: {
-                    required
-                }
+                gender: {required}
             }
         }
         ,

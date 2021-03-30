@@ -8,10 +8,11 @@ import 'bootstrap-vue/dist/bootstrap-vue-icons.min.css'
 import {firebaseAuth} from './config/firebaseConfig';
 import App from './App.vue';
 import Vuelidate from 'vuelidate'
-import wb from "./registerServiceWorker";
 import ImageUploader from 'vue-image-upload-resize'
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
 
-Vue.prototype.$workbox = wb;
+Vue.use(VueMaterial)
 Vue.use(Vuelidate)
 Vue.use(BootstrapVue);
 Vue.use(BootstrapVueIcons);
@@ -44,7 +45,6 @@ firebaseListener(authStatusChange);
 
 
 export const router = new VueRouter({
-    mode: 'history',
     routes
 });
 

@@ -5,6 +5,7 @@ const state = {
     isInventoryLoading: false,
     isProductLoading: false,
     isProductListLoading: true,
+    isPaymentLoading: false,
     inventory: [],
     viewProduct: {},
     products: []
@@ -71,7 +72,11 @@ const actions = {
             brandID: inventoryObject.brandID,
             verified: inventoryObject.verified,
             productDescription: inventoryObject.productDescription,
-            productType: inventoryObject.productType
+            productType: inventoryObject.productType,
+            brandName: inventoryObject.brandName,
+            addedTimeStamp: inventoryObject.addedTimeStamp,
+            gender: inventoryObject.gender,
+            thumbnailURL: inventoryObject.thumbnailURL
         })
     },
     getProductByID({commit}, productID) {
@@ -80,6 +85,59 @@ const actions = {
         return db.collection('inventory').doc(productID).onSnapshot(res => {
             commit('SET_VIEW_PRODUCT', res.data());
         });
+    },
+    saveSuccessfulPayment: (state, {cart, userID, billingAddress, shippingAddress}) => {
+        state.isPaymentLoading = true;
+        db.collection('sales').orderBy('paymentTimestamp', "asc").limitToLast(1).get().then(lastPayment => {
+            let invoiceNo = 1000
+            lastPayment.forEach(payment => {
+                if (payment.exists) {
+                    invoiceNo = payment.data().invoiceNo + 1
+                }
+            })
+
+            cart.products.foreach(prod => {
+                db.collection('inventory').doc(prod.productID).get().then(res => {
+                    let toUpdate = {};
+                    let dontChangeThis = res.productType.sizes;
+
+                    dontChangeThis.filter(obj => {
+                        toUpdate = obj;
+                    })
+
+                    dontChangeThis.splice(dontChangeThis.findIndex(dontChangeThis), 1);
+
+                    toUpdate.stock -= 1;
+
+                    dontChangeThis.push(toUpdate)
+
+                    db.collection('inventory').doc(res.id).update({
+                        productType: {
+                            id: res.id,
+                            sizes: dontChangeThis,
+                            productTypeName: res.productTypeName
+                        }
+                    }).then(res => {
+                        console.log(res)
+                        db.collection("sales").doc().set({
+                            paymentTimestamp: moment().unix(),
+                            cart: cart,
+                            uid: userID,
+                            billingAddress: billingAddress,
+                            shippingAddress: shippingAddress,
+                            invoiceNo: invoiceNo
+                        }).then(res => {
+                            console.log(res)
+                            state.isPaymentLoading = false
+                        }).catch(error => {
+                            console.log(error)
+                            state.isPaymentLoading = false
+                        })
+                    })
+                })
+            })
+
+        })
     }
 }
 

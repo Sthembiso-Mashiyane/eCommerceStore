@@ -31,8 +31,11 @@ export const registerByEmail = async ({commit}, {email, password, displayName, f
                 firstName: firstName,
                 lastName: lastName,
                 telNumber: telNum,
+                addedByGoogleAuth: false,
                 uid: res.user.uid,
-                isAdmin: false
+                isAdmin: false,
+                isBrand: false
+
             }
         ).then(() => {
             return
@@ -63,6 +66,8 @@ export const loginWithGoogle = async () => {
                     addedByGoogleAuth: true,
                     firstName: '',
                     lastName: '',
+                    isAdmin: false,
+                    isBrand: false
                 })
             }
 

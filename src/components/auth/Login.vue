@@ -15,14 +15,14 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-6 col-12 pb-3">
-                            <button class="btn btn-success" style="width: 100%" @click.prevent="loginWithEmailLocal"
+                            <button class="btn btn-info" style="width: 100%" @click.prevent="loginWithEmailLocal"
                                     :disabled="isLoading">
                                 <i v-if="isLoading" class="fa fa-spinner fa-spin"/>
                                 Log in
                             </button>
                         </div>
                         <div class="col-sm-6 col-12">
-                            <button class="btn btn border-success" style="width: 100%" @click.prevent="loginWithGoogleLocal"
+                            <button class="btn btn border-info" style="width: 100%" @click.prevent="loginWithGoogleLocal"
                                     :disabled="isLoading">
                                 <i v-if="isLoading" class="fa fa-spinner fa-spin"/>
                                 <img src="../../assets/images/5847f9cbcef1014c0b5e48c8.png" height="15px" alt="">

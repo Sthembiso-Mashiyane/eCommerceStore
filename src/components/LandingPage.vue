@@ -1,6 +1,7 @@
 <template>
+    <sequential-entrance>
     <div class="container-fluid">
-        <div class="row p-2 pb-5">
+        <div class="row p-2">
             <swiper class="swiper" :options="swiperOption">
                 <swiper-slide><img src="../assets/images/example.png" /></swiper-slide>
                 <swiper-slide><img src="../assets/images/example.png" /></swiper-slide>
@@ -28,6 +29,7 @@
                     src="../assets/images/istockphoto-1011190214-1024x1024.jpg" /></div>
         </div>
     </div>
+    </sequential-entrance>
 </template>
 
 <script>

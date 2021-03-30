@@ -12,6 +12,7 @@ import Inventory from "./components/brand/Inventory";
 import Success from "./components/payment/Success";
 import Checkout from "./components/payment/Checkout";
 import Cancel from "./components/payment/Cancel";
+import PaymentNotification from "./components/payment/PaymentNotification";
 
 
 function guardMyroute(to, from, next) {
@@ -51,6 +52,7 @@ export const routes = [
     {path: '/successful-payment', component: Success, name: 'success', beforeEnter: guardMyroute},
     {path: '/cancel-payment', component: Cancel, name: 'cancel', beforeEnter: guardMyroute},
     {path: '/checkout', component: Checkout, name: 'checkout', beforeEnter: guardMyroute},
+    {path: '/payment-notification', component: PaymentNotification, name: 'payment', beforeEnter: guardMyroute},
 
     {path: '*', redirect: '/'}
 ];

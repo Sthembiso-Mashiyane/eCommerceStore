@@ -16,7 +16,7 @@
                 </div>
                 <div class="form-group">
                     <label for="size">Add Size</label>
-                    <input type="number" required="required" name="size" id="size"
+                    <input type="text" required="required" name="size" id="size"
                            class="form-control mb-3"
                            placeholder="Add Size"
                            value=""

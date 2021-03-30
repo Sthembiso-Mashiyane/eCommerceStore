@@ -31,7 +31,8 @@
                 </thead>
 
                 <transition-group name="list-shopping-cart" tag="tbody">
-                    <app-cart-item v-for="cartItem in cartItemList" :cartItem="cartItem"
+                    <app-cart-item :is-confirmation-page="isConfirmationPage" v-for="cartItem in cartItemList"
+                                   :cartItem="cartItem"
                                    :key="cartItem.productID"></app-cart-item>
                 </transition-group>
 
@@ -40,7 +41,7 @@
                     <td class="text-center"><strong>Total R{{ formatPrice(cartValue) }}</strong></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td v-if="!isConfirmationPage">
                         <button class="btn btn-warning" @click="saveShoppingCartLocal">
                             <i class="fa fa-angle-left"></i> Save and Continue Shopping
                         </button>
@@ -48,67 +49,14 @@
                     <td colspan="2" class="d-none d-sm-table-cell"></td>
                     <td class="d-none d-sm-table-cell text-center"><strong>Total R{{ formatPrice(cartValue) }}</strong>
                     </td>
-                    <td class="px-0">
-                        <button class="btn btn-success" @click="goToRoute">
-                            <span class="text-nowrap">Checkout <i class="fa fa-angle-right d-inline"></i></span>
+                    <td v-if="!isConfirmationPage" class="px-0">
+                        <button class="btn btn-success">
+                            <span class="text-nowrap" @click="checkout">Checkout <i class="fa fa-angle-right d-inline"></i></span>
                         </button>
                     </td>
                 </tr>
                 </tfoot>
             </table>
-
-            <b-modal ref="payment-modal" size="lg" hide-footer title="Checkout Payment">
-                <div class="row">
-                    <div class="container-fluid d-flex justify-content-center">
-                        <div class="col-sm-8 col-md-12">
-                            <div class="card mb-3">
-                                <div class="card-header">
-                                    <div class="row">
-                                        <div class="col-md-6"><span>CREDIT/DEBIT CARD PAYMENT</span></div>
-                                        <div class="col-md-6 text-right" style="margin-top: -5px;"><img
-                                                src="https://img.icons8.com/color/36/000000/visa.png"> <img
-                                                src="https://img.icons8.com/color/36/000000/mastercard.png"></div>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group"><label for="cc-number" class="control-label">CARD
-                                        NUMBER</label>
-                                        <input id="cc-number" type="tel" class="input-lg form-control cc-number"
-                                               autocomplete="cc-number" placeholder="•••• •••• •••• ••••" required>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group"><label for="cc-exp" class="control-label">CARD
-                                                EXPIRY</label> <input id="cc-exp" type="tel"
-                                                                      class="input-lg form-control cc-exp"
-                                                                      autocomplete="cc-exp"
-                                                                      placeholder="•• / ••" required></div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group"><label for="cc-cvc" class="control-label">CARD
-                                                CVC</label>
-                                                <input id="cc-cvc" type="tel" class="input-lg form-control cc-cvc"
-                                                       autocomplete="off" placeholder="••••" required></div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group"><label class="control-label">CARD HOLDER NAME</label>
-                                        <input type="text" class=" form-control"></div>
-                                    <div class="form-group">
-                                        <button type="button"
-                                                class="btn btn-success form-control">PAY R{{formatPrice(cartValue)}}
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-2">
-                    <b-button variant="outline-info" class="mr-2" @click="hideModal">Save</b-button>
-                    <b-button variant="outline-danger" class="mr-2" @click="toggleModal">Close</b-button>
-                </div>
-
-            </b-modal>
         </div>
     </div>
 </template>
@@ -122,9 +70,12 @@
 
     export default {
         data() {
-            return {
-                merchantId: "10013266",
-                merchantKey: "mrk7nzluqxnjp"
+            return {}
+        },
+        props: {
+            isConfirmationPage: {
+                default: false,
+                type: Boolean
             }
         },
         computed: {
@@ -147,8 +98,8 @@
 
                 itemList.map(item => {
                     for (let prodIdx = 0; prodIdx < prodList.length; prodIdx++) {
-                        if (prodList[prodIdx].id == item.id) {
-                            if (prodList[prodIdx].quantity < item.quantity) {
+                        if (prodList[prodIdx].productID == item.productID) {
+                            if (prodList[prodIdx].totalStock < item.totalStock) {
                                 message = `Only ${prodList[prodIdx].quantity} ${item.title} available in stock`;
                                 isValid = false;
                                 return;
@@ -208,21 +159,7 @@
                     } = this.checkValidCart(this.cartItemList, this.products);
 
                     if (isValid) {
-                        this.saveToTransaction({
-                            cartItemList: this.cartItemList,
-                            uid: this.currentUser.uid
-                        }).then(() => {
-                            this.addMessage({
-                                messageClass: 'success',
-                                message: 'Your order has been successfully processed!'
-                            });
-                            this.saveShoppingCart({
-                                cartItemList: [],
-                                uid: this.currentUser.uid
-                            });
-                            this.clearCart();
-                            this.$router.push('/');
-                        });
+                        this.$router.push('/checkout');
                     } else {
                         this.addMessage({
                             messageClass: 'danger',
@@ -241,7 +178,7 @@
                 return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
             },
             goToRoute() {
-                this.$router.push({path: '/checkout'})
+                this.$router.push({name: 'checkout'})
             }
         }
     }
